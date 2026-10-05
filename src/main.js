@@ -5,6 +5,16 @@ function createElement(tag, className = '', text = '') {
   return element;
 }
 
+const images = ['🍎', '🍌', '🍇', '🍒', '🍋', '🍉', '🥝', '🍑'];
+
+function shuffle(array) {
+  for (let i = array.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [array[i], array[j]] = [array[j], array[i]];
+  }
+  return array;
+}
+
 const header = createElement('header', 'header');
 const newGameButton = createElement('button', 'button', 'Новая игра');
 const leaderboardButton = createElement('button', 'button', 'Таблица лидеров');
@@ -15,6 +25,18 @@ const stats = createElement('div', 'stats');
 const movesCounter = createElement('p', 'stats__item', 'Ходы: 0');
 const pairsCounter = createElement('p', 'stats__item', 'Пары: 0 из 8');
 stats.append(movesCounter, pairsCounter);
-main.append(stats);
+const board = createElement('div', 'board');
+main.append(stats, board);
 
 document.body.append(header, main);
+
+function createBoard() {
+  const cards = shuffle([...images, ...images]);
+  cards.forEach((image) => {
+    const card = createElement('button', 'card', '?');
+    card.dataset.image = image;
+    board.append(card);
+  });
+}
+
+createBoard();
