@@ -1,11 +1,11 @@
-function createElement(tag, className = '', text = '') {
-  const element = document.createElement(tag);
-  if (className) element.className = className;
-  if (text) element.textContent = text;
-  return element;
-}
+import { createElement } from './dom.js';
+import { images } from './cards-data.js';
+import { board } from './layout.js';
 
-const images = ['🍎', '🍌', '🍇', '🍒', '🍋', '🍉', '🥝', '🍑'];
+const CLOSE_DELAY = 1000;
+
+let firstCard = null;
+let isLocked = false;
 
 function shuffle(array) {
   for (let i = array.length - 1; i > 0; i--) {
@@ -14,26 +14,6 @@ function shuffle(array) {
   }
   return array;
 }
-
-const header = createElement('header', 'header');
-const newGameButton = createElement('button', 'button', 'Новая игра');
-const leaderboardButton = createElement('button', 'button', 'Таблица лидеров');
-header.append(newGameButton, leaderboardButton);
-
-const main = createElement('main', 'main');
-const stats = createElement('div', 'stats');
-const movesCounter = createElement('p', 'stats__item', 'Ходы: 0');
-const pairsCounter = createElement('p', 'stats__item', 'Пары: 0 из 8');
-stats.append(movesCounter, pairsCounter);
-const board = createElement('div', 'board');
-main.append(stats, board);
-
-document.body.append(header, main);
-
-const CLOSE_DELAY = 1000;
-
-let firstCard = null;
-let isLocked = false;
 
 function openCard(card) {
   card.textContent = card.dataset.image;
@@ -68,7 +48,7 @@ function handleCardClick(card) {
   firstCard = null;
 }
 
-function createBoard() {
+export function createBoard() {
   const cards = shuffle([...images, ...images]);
   cards.forEach((image) => {
     const card = createElement('button', 'card', '?');
@@ -77,5 +57,3 @@ function createBoard() {
     board.append(card);
   });
 }
-
-createBoard();
