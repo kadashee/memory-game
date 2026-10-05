@@ -30,21 +30,39 @@ main.append(stats, board);
 
 document.body.append(header, main);
 
+const CLOSE_DELAY = 1000;
+
 let firstCard = null;
+let isLocked = false;
 
 function openCard(card) {
   card.textContent = card.dataset.image;
   card.classList.add('card--open');
 }
 
+function closeCard(card) {
+  card.textContent = '?';
+  card.classList.remove('card--open');
+}
+
 function handleCardClick(card) {
-  if (card.classList.contains('card--open')) return;
+  if (isLocked || card.classList.contains('card--open')) return;
 
   openCard(card);
 
   if (!firstCard) {
     firstCard = card;
     return;
+  }
+
+  if (firstCard.dataset.image !== card.dataset.image) {
+    const previousCard = firstCard;
+    isLocked = true;
+    setTimeout(() => {
+      closeCard(previousCard);
+      closeCard(card);
+      isLocked = false;
+    }, CLOSE_DELAY);
   }
 
   firstCard = null;
