@@ -1,11 +1,13 @@
 import { createElement } from './dom.js';
 import { images } from './cards-data.js';
-import { board } from './layout.js';
+import { board, movesCounter, pairsCounter } from './layout.js';
 
 const CLOSE_DELAY = 1000;
 
 let firstCard = null;
 let isLocked = false;
+let moves = 0;
+let pairs = 0;
 
 function shuffle(array) {
   for (let i = array.length - 1; i > 0; i--) {
@@ -25,6 +27,11 @@ function closeCard(card) {
   card.classList.remove('card--open');
 }
 
+function updateCounters() {
+  movesCounter.textContent = `Ходы: ${moves}`;
+  pairsCounter.textContent = `Пары: ${pairs} из ${images.length}`;
+}
+
 function handleCardClick(card) {
   if (isLocked || card.classList.contains('card--open')) return;
 
@@ -35,7 +42,11 @@ function handleCardClick(card) {
     return;
   }
 
-  if (firstCard.dataset.image !== card.dataset.image) {
+  moves += 1;
+
+  if (firstCard.dataset.image === card.dataset.image) {
+    pairs += 1;
+  } else {
     const previousCard = firstCard;
     isLocked = true;
     setTimeout(() => {
@@ -46,6 +57,7 @@ function handleCardClick(card) {
   }
 
   firstCard = null;
+  updateCounters();
 }
 
 export function createBoard() {
