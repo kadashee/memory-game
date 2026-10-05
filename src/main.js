@@ -30,11 +30,32 @@ main.append(stats, board);
 
 document.body.append(header, main);
 
+let firstCard = null;
+
+function openCard(card) {
+  card.textContent = card.dataset.image;
+  card.classList.add('card--open');
+}
+
+function handleCardClick(card) {
+  if (card.classList.contains('card--open')) return;
+
+  openCard(card);
+
+  if (!firstCard) {
+    firstCard = card;
+    return;
+  }
+
+  firstCard = null;
+}
+
 function createBoard() {
   const cards = shuffle([...images, ...images]);
   cards.forEach((image) => {
     const card = createElement('button', 'card', '?');
     card.dataset.image = image;
+    card.addEventListener('click', () => handleCardClick(card));
     board.append(card);
   });
 }
